@@ -20,7 +20,6 @@ const App: React.FC = () => {
   const handleResults = (result: ParseResult) => {
     const finalRows: Row[] = [];
     const rawRows = result.data;
-    console.log(rawRows);
 
     for (let i = 1; i < rawRows.length; i++) {
       const [
@@ -36,7 +35,7 @@ const App: React.FC = () => {
         note
       ] = rawRows[i];
       finalRows.push({
-        date: date,
+        date: date.replace(/ \+\d+/g, "").replace(/ /g, "T"),
         exercise,
         reps: parseFloat(reps),
         weight: parseFloat(weight),
