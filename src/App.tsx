@@ -11,7 +11,7 @@ import { saveState, loadState } from "utils/localStorage";
 const App: React.FC = () => {
   const [files, setFiles] = React.useState<File[]>([]);
   const [rows, setRows] = React.useState<Row[]>([]);
-  const [debug, setDebug] = React.useState<string>("");
+  const [error, setError] = React.useState<string>("");
 
   React.useEffect(() => {
     setRows(loadState() || []);
@@ -60,7 +60,7 @@ const App: React.FC = () => {
         complete: handleResults
       });
     } catch (e) {
-      setDebug(`error ${e}`);
+      setError(`Error: ${e}`);
     }
   };
 
@@ -70,9 +70,8 @@ const App: React.FC = () => {
         <div className="container">
           <h1 className="name">FitData</h1>
           <FileInput value={files} onChange={handleFileInputChange} />
-          <div>Debug: {debug}</div>
-          <div>Rows: {rows.length}</div>
-          {/* {rows.length > 0 && <Results rows={rows} />} */}
+          <div className="error">{error}</div>
+          {rows.length > 0 && <Results rows={rows} />}
         </div>
       </div>
     </Provider>

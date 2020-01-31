@@ -48,6 +48,7 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
     selectedExcercise,
     setSelectedExcercise
   ] = React.useState<Option | null>(null);
+  const [error, setError] = React.useState("");
 
   const rowCount = React.useCallback(() => rows.length, [rows]);
 
@@ -61,7 +62,6 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
         grouped[row.exercise] = [row];
       }
     }
-    console.log({ grouped });
     return grouped;
   };
 
@@ -82,30 +82,38 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
     return rows.map(r => r.weight).reduce((a, b) => a + b, 0) / 1000;
   };
 
-  const rowsByExcercise = groupByExcercise();
+  try {
+    const rowsByExcercise = groupByExcercise();
 
-  let chartData: ChartData[] = [];
-  const selectedMeta = {
-    dataKey: "weight",
-    unit: "kg"
-  };
-  if (selectedExcercise) {
-    chartData = rowsByExcercise[selectedExcercise.value]
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-      .map(row => ({
-        weight: row.weight,
-        duration: row.duration,
-        reps: row.reps,
-        date: format(new Date(row.date), "MM MMM")
-      }));
-    if (chartData.map(r => r.duration).reduce((a, b) => a + b, 0) > 0) {
-      selectedMeta.dataKey = "duration";
-      selectedMeta.unit = "s";
+    let chartData: ChartData[] = [];
+    const selectedMeta = {
+      dataKey: "weight",
+      unit: "kg"
+    };
+    if (selectedExcercise) {
+      chartData = rowsByExcercise[selectedExcercise.value]
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        .map(row => ({
+          weight: row.weight,
+          duration: row.duration,
+          reps: row.reps,
+          date: format(new Date(row.date), "MM MMM")
+        }));
+      if (chartData.map(r => r.duration).reduce((a, b) => a + b, 0) > 0) {
+        selectedMeta.dataKey = "duration";
+        selectedMeta.unit = "s";
+      }
+      if (chartData.map(r => r.reps).reduce((a, b) => a + b, 0) > 0) {
+        selectedMeta.dataKey = "reps";
+        selectedMeta.unit = "reps";
+      }
     }
-    if (chartData.map(r => r.reps).reduce((a, b) => a + b, 0) > 0) {
-      selectedMeta.dataKey = "reps";
-      selectedMeta.unit = "reps";
-    }
+  } catch (e) {
+    setError(`Error: ${e}`);
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
   }
 
   return (
