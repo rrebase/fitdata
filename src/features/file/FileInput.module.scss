@@ -1,0 +1,15 @@
+.label {
+  font-size: 0.75rem;
+  border: 2px solid;
+  padding: 0.625rem;
+  color: #fff;
+
+  &:hover {
+    color: orange;
+    cursor: pointer;
+  }
+}
+
+.selectedFiles {
+  margin-top: 2rem;
+}
