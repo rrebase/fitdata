@@ -1,6 +1,6 @@
 export const loadState = () => {
   try {
-    const serializedState = localStorage.getItem("fitdata-state");
+    const serializedState = localStorage.getItem("fitdata-state-v2");
     if (serializedState === null) {
       return undefined;
     }
@@ -12,7 +12,7 @@ export const loadState = () => {
 
 export const saveState = (state: any) => {
   const serializedState = JSON.stringify(state);
-  localStorage.setItem("fitdata-state", serializedState);
+  localStorage.setItem("fitdata-state-v2", serializedState);
 };
 
 export default { loadState, saveState };
