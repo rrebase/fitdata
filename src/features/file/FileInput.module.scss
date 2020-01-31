@@ -1,3 +1,8 @@
+.fileInput {
+  display: flex;
+  justify-content: center;
+}
+
 .label {
   font-size: 0.75rem;
   border: 2px solid;
@@ -11,5 +16,6 @@
 }
 
 .selectedFiles {
+  color: #fff;
   margin-top: 2rem;
 }
