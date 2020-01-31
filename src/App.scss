@@ -1,5 +1,11 @@
+$primary-bg-color: #282c34;
+
+html {
+  background-color: $primary-bg-color;
+}
+
 .App {
-  background-color: #282c34;
+  background-color: $primary-bg-color;
   min-height: 100vh;
 }
 

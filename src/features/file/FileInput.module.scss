@@ -6,6 +6,7 @@
 .label {
   font-size: 0.75rem;
   border: 2px solid;
+  border-radius: 6px;
   padding: 0.625rem;
   color: #fff;
 
@@ -16,6 +17,6 @@
 }
 
 .selectedFiles {
-  color: #fff;
-  margin-top: 2rem;
+  color: #726b62;
+  margin-top: 1rem;
 }

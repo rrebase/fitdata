@@ -31,7 +31,7 @@ const FileInput: React.FC<FileInputProps> = ({
     </div>
     {Boolean(value.length) && (
       <div className={styles.selectedFiles}>
-        Selected file: {value.map(f => f.name).join(", ")}
+        Opened file: {value.map(f => f.name).join(", ")}
       </div>
     )}
   </div>

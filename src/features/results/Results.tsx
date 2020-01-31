@@ -166,7 +166,7 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
             <AreaChart
               data={chartData}
               margin={{
-                top: 10,
+                top: 40,
                 right: 30,
                 left: 0,
                 bottom: 0
@@ -177,7 +177,7 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
                 dataKey={selectedMeta.dataKey}
                 unit={` ${selectedMeta.unit}`}
               />
-              <XAxis dataKey="date" minTickGap={95} />
+              <XAxis dataKey="date" minTickGap={60} />
               <Tooltip />
               <Area
                 type="monotone"
@@ -191,6 +191,7 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
       ) : (
         <BarChartLoader />
       )}
+      <footer className={styles.footerText}>Feature suggestions?</footer>
     </div>
   );
 };
