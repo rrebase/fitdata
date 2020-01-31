@@ -82,14 +82,15 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
     return rows.map(r => r.weight).reduce((a, b) => a + b, 0) / 1000;
   };
 
+  let rowsByExcercise: Record<string, Row[]> = {};
+  let chartData: ChartData[] = [];
+  const selectedMeta = {
+    dataKey: "weight",
+    unit: "kg"
+  };
   try {
-    const rowsByExcercise = groupByExcercise();
+    rowsByExcercise = groupByExcercise();
 
-    let chartData: ChartData[] = [];
-    const selectedMeta = {
-      dataKey: "weight",
-      unit: "kg"
-    };
     if (selectedExcercise) {
       chartData = rowsByExcercise[selectedExcercise.value]
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())

@@ -70,7 +70,7 @@ const App: React.FC = () => {
         <div className="container">
           <h1 className="name">FitData</h1>
           <FileInput value={files} onChange={handleFileInputChange} />
-          <div className="error">{error}</div>
+          {error && <div className="error">{error}</div>}
           {rows.length > 0 && <Results rows={rows} />}
         </div>
       </div>
