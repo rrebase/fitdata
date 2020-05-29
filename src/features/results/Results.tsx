@@ -8,7 +8,8 @@ import {
   YAxis,
   CartesianGrid,
   ResponsiveContainer,
-  Tooltip
+  Tooltip,
+  ReferenceLine
 } from "recharts";
 import Select from "react-select";
 import clsx from "clsx";
@@ -48,8 +49,8 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
     selectedExcercise,
     setSelectedExcercise
   ] = React.useState<Option | null>(null);
-
   const rowCount = React.useCallback(() => rows.length, [rows]);
+  const [filter, setFilter] = React.useState("weight");
 
   const groupByExcercise = (): Record<string, Row[]> => {
     const grouped: Record<string, Row[]> = {};
@@ -84,9 +85,15 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
   const rowsByExcercise = groupByExcercise();
 
   let chartData: ChartData[] = [];
-  const selectedMeta = {
-    dataKey: "weight",
-    unit: "kg"
+  const hasData = (field: "duration" | "reps" | "weight") =>
+    chartData.map(r => r[field]).reduce((a, b) => a + b, 0) > 0;
+
+  const selectedMeta: {
+    dataKey: keyof ChartData;
+    unit: "s" | "reps" | "kg";
+  } = {
+    dataKey: "reps",
+    unit: "reps"
   };
   if (selectedExcercise) {
     chartData = rowsByExcercise[selectedExcercise.value]
@@ -97,15 +104,33 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
         reps: row.reps,
         date: format(new Date(row.date), "MM MMM")
       }));
-    if (chartData.map(r => r.duration).reduce((a, b) => a + b, 0) > 0) {
+    if (filter === "duration") {
       selectedMeta.dataKey = "duration";
       selectedMeta.unit = "s";
     }
-    if (chartData.map(r => r.reps).reduce((a, b) => a + b, 0) > 0) {
+    if (filter === "reps") {
       selectedMeta.dataKey = "reps";
       selectedMeta.unit = "reps";
     }
+    if (filter === "weight") {
+      selectedMeta.dataKey = "weight";
+      selectedMeta.unit = "kg";
+    }
   }
+
+  React.useEffect(() => {
+    if (hasData("duration")) {
+      setFilter("duration");
+    } else if (hasData("reps")) {
+      setFilter("reps");
+    } else {
+      setFilter("weight");
+    }
+  }, [selectedExcercise]);
+
+  const maxValue = Math.max(
+    ...chartData.map(r => r[selectedMeta.dataKey] as number)
+  );
 
   return (
     <div className={styles.container}>
@@ -160,6 +185,40 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
           })}
         />
       </div>
+      <div className={styles.filterButtonGroup}>
+        {hasData("weight") && (
+          <button
+            value="weight"
+            onClick={() => setFilter("weight")}
+            className={clsx({ [styles.activeButton]: filter === "weight" })}
+          >
+            🏋️‍♂️ weight
+          </button>
+        )}
+        {hasData("reps") && (
+          <button
+            value="reps"
+            onClick={() => setFilter("reps")}
+            className={clsx({ [styles.activeButton]: filter === "reps" })}
+          >
+            💪 reps
+          </button>
+        )}
+        {hasData("duration") && (
+          <button
+            value="duration"
+            onClick={() => setFilter("duration")}
+            className={clsx({ [styles.activeButton]: filter === "duration" })}
+          >
+            ⏱ duration
+          </button>
+        )}
+      </div>
+      {selectedExcercise !== null && (
+        <div className={styles.personalRecord}>
+          🎉 PR: {maxValue} {selectedMeta.unit}
+        </div>
+      )}
       {selectedExcercise !== null ? (
         <div className={styles.performanceChart}>
           <ResponsiveContainer>
@@ -172,6 +231,12 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
                 bottom: 0
               }}
             >
+              <ReferenceLine
+                y={maxValue}
+                stroke="#b13aef"
+                strokeDasharray="8"
+              />
+
               <CartesianGrid stroke="#666666" vertical={false} />
               <YAxis
                 dataKey={selectedMeta.dataKey}
@@ -191,7 +256,16 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
       ) : (
         <BarChartLoader />
       )}
-      <footer className={styles.footerText}>Feature suggestions?</footer>
+      <footer className={styles.footer}>
+        <a
+          href="https://github.com/rrebase/fitdata"
+          className={styles.footerText}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          GitHub
+        </a>
+      </footer>
     </div>
   );
 };
