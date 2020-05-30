@@ -1,4 +1,4 @@
-👉 [Visit app](https://fitdata.netlify.com/)
+👉 [Visit app](https://fitdata.netlify.app/)
 
 ## 🤔 What is this?
 
