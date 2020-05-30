@@ -173,7 +173,7 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
               (a, b) => rowsByExcercise[b].length - rowsByExcercise[a].length
             )
             .map(key => ({
-              label: `${key} (${rowsByExcercise[key].length})`,
+              label: `${key} (${rowsByExcercise[key].length}x)`,
               value: key
             }))}
           theme={theme => ({
@@ -216,7 +216,7 @@ const Results: React.FC<ResultsProps> = ({ rows }) => {
       </div>
       {selectedExcercise !== null && (
         <div className={styles.personalRecord}>
-          🎉 PR: {maxValue} {selectedMeta.unit}
+          🎉 PR: {maxValue.toFixed(0)} {selectedMeta.unit}
         </div>
       )}
       {selectedExcercise !== null ? (

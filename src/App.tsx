@@ -34,6 +34,10 @@ const App: React.FC = () => {
         isWarmup,
         note
       ] = rawRows[i];
+      // Apparently there can be empty rows, ignore those
+      if (!date) {
+        continue;
+      }
       finalRows.push({
         date: date.replace(/ \+\d+/g, "").replace(/ /g, "T"),
         exercise,
